@@ -1,6 +1,7 @@
 package tcpSocket;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.DataInputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
@@ -20,17 +21,15 @@ public class TCPClient {
 				+ clientSocket.getPort());
 
 		DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
-		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+		DataInputStream inFromServer = new DataInputStream(clientSocket.getInputStream()); 	//Better used to receive UTF stream 
 
+		System.out.println("\nType a Prefix to Find Matching Words from Server: ");
 		sentence = inFromUser.readLine();
 		while (sentence.toLowerCase().compareTo("exit") != 0) {
 			outToServer.writeBytes(sentence + '\n');
-//			//Print empty space between user inputs
-//			System.out.println();
-
-			matchingWordsString = inFromServer.readLine();
-
-			System.out.println("FROM SERVER: " + matchingWordsString);
+			matchingWordsString = inFromServer.readUTF();
+			System.out.println("FROM SERVER: " + matchingWordsString + '\n');
+			System.out.println("Type a Prefix to Find Matching Words from Server: ");
 			sentence = inFromUser.readLine();
 		}
 
