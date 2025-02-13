@@ -16,7 +16,7 @@ public class TCPServer {
 		String clientPrefix;
 		String word;
 		List<String> listMatchingWords = new ArrayList<String>();
-		List<String> captializedWords = new ArrayList<String>();
+		List<String> captializedWords = new ArrayList<String>(); //OPTIONAL - list meant to capture capitalized matching words
 		String matchingWordsString;
 		BufferedReader inFile = null;
 		File file = new File("bin/src/tcpSocket/words.txt");
@@ -24,7 +24,7 @@ public class TCPServer {
 		ServerSocket welcomeSocket = new ServerSocket(6789);
 
 		while (true) {
-			System.out.println("ServerSocket created, blocking on accept and waiting for incoming requests!");
+			System.out.println("\nServerSocket created, blocking on accept and waiting for incoming requests!");
 			Socket connectionSocket = welcomeSocket.accept();
 			
 			System.out.println("ServerSocket accepted incoming request from: " + connectionSocket.getPort());
@@ -41,12 +41,11 @@ public class TCPServer {
 						clientPrefix = inFromClient.readLine();
 						// Read file into memory (efficient read using BufferedReader)
 						inFile = new BufferedReader(new FileReader(file));
-						// Read a word from words.txt
-						word = inFile.readLine();
-						// Find words in the words.txt file matching the pre-fix provided by Client
+						// Read q word form the the files and Find the words that match the pre-fix provided by Client
 						while((word = inFile.readLine()) != null) {
-							//Validation checks
-							
+							/**
+							 * Validation checks: Skipping empty Strings and words that are shorter than Client provided prefixes
+							 **/
 							//1. Skip empty word Strings
 							if(word.isEmpty()) {
 								continue; 
@@ -58,8 +57,7 @@ public class TCPServer {
 							
 							boolean match = true;
 							for(int i = 0; i < clientPrefix.length(); i++) {
-									// match = false if word is shorter in length to the prefix char index 
-									// OR if characters between prefix and word do not match.
+									// match = false, if characters between prefix and word do not match.
 									if(clientPrefix.charAt(i) != word.charAt(i)) {
 										match = false;
 										break;
@@ -69,7 +67,7 @@ public class TCPServer {
 									listMatchingWords.add(word);
 							}
 						}
-						//Captialize the first letter of each listMatchingWords
+						//Captialize the first letter of each listMatchingWords (OPTIONAL!!)
 						for (String w : listMatchingWords) {
 							captializedWords.add(w.substring(0, 1).toUpperCase() + w.substring(1).toLowerCase());
 						}
@@ -91,12 +89,12 @@ public class TCPServer {
 					}
 				}
 			} catch (Exception e) { //Handle general exceptions
-				// Close Socket
+				// Close Socket (Not Closing ServerSocket since It needs to keep listening for requests for new Sockets)
 				connectionSocket.close();
 				// Closes this output stream and releases any system resources associated with the stream
+				inFromClient.close();
 				outToClient.close(); 					
 				System.out.println("Client closed connection.");
-				System.out.println("Exception: " + e.getMessage());
 			}
 		}
 	}

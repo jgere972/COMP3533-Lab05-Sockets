@@ -14,7 +14,7 @@ public class TCPClient {
 		BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
 
 		Socket clientSocket = new Socket("127.0.0.1", 6789);
-		System.out.println("Client successfully established TCP connection.\n"
+		System.out.println("\nClient successfully established TCP connection.\n"
 				+ "Client(local) end of the connection uses port " 
 				+ clientSocket.getLocalPort() 
 				+ " and server(remote) end of the connection uses port "
@@ -23,16 +23,17 @@ public class TCPClient {
 		DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
 		DataInputStream inFromServer = new DataInputStream(clientSocket.getInputStream()); 	//Better used to receive UTF stream 
 
+		//Client Simple UI for user to retrieve words from a file stored on the Server host.
 		System.out.println("\nType a Prefix to Find Matching Words from Server: ");
 		sentence = inFromUser.readLine();
 		while (sentence.toLowerCase().compareTo("exit") != 0) {
 			outToServer.writeBytes(sentence + '\n');
 			matchingWordsString = inFromServer.readUTF();
 			System.out.println("FROM SERVER: " + matchingWordsString + '\n');
+			//Repeat the prompt for additional requests
 			System.out.println("Type a Prefix to Find Matching Words from Server: ");
 			sentence = inFromUser.readLine();
 		}
-
 		clientSocket.close();
 	}
 }
