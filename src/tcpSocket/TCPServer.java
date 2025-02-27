@@ -16,7 +16,7 @@ public class TCPServer {
 		String clientPrefix;
 		String word;
 		List<String> listMatchingWords = new ArrayList<String>();
-		List<String> captializedWords = new ArrayList<String>(); //OPTIONAL - list meant to capture capitalized matching words
+//		List<String> captializedWords = new ArrayList<String>(); //OPTIONAL - list meant to capture capitalized matching words
 		String matchingWordsString;
 		BufferedReader inFile = null;
 		File file = new File("bin/src/tcpSocket/words.txt");
@@ -54,11 +54,13 @@ public class TCPServer {
 							if (clientPrefix.length() > word.length()){
 								continue;
 							}
-							
+							String minimizedClientPrefix = clientPrefix.toLowerCase();
 							boolean match = true;
 							for(int i = 0; i < clientPrefix.length(); i++) {
+								//Minimize each word processed to fairly compare minimized Client provided prefix with that lower case word
+								String minimizedWord = word.toLowerCase();
 									// match = false, if characters between prefix and word do not match.
-									if(clientPrefix.charAt(i) != word.charAt(i)) {
+									if(minimizedClientPrefix.charAt(i) != minimizedWord.charAt(i)) {
 										match = false;
 										break;
 									}
@@ -68,18 +70,18 @@ public class TCPServer {
 							}
 						}
 						//Captialize the first letter of each listMatchingWords (OPTIONAL!!)
-						for (String w : listMatchingWords) {
-							captializedWords.add(w.substring(0, 1).toUpperCase() + w.substring(1).toLowerCase());
-						}
+//						for (String w : listMatchingWords) {
+//							captializedWords.add(w.substring(0, 1).toUpperCase() + w.substring(1).toLowerCase());
+//						}
 						// Join all Strings together with "," as a delimiter
-						matchingWordsString = String.join(", ", captializedWords);
+						matchingWordsString = String.join(", ", listMatchingWords);
 						// Write the String of words back to the client (Best to use writeUTF for Strings)
 						outToClient.writeUTF(matchingWordsString);
 						// Flushes this data output stream. This forces any buffered output bytes to be written out to the stream.
 						outToClient.flush();
 						// Clear the List of matching words and the list of capitalized words
 						listMatchingWords.clear();
-						captializedWords.clear();
+//						captializedWords.clear();
 					} catch(FileNotFoundException e) {	//Handle word.txt not found exception
 						System.err.println("File not found: " + e.getMessage());
 					} catch (IOException e) { //Handle issue with IO access

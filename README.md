@@ -6,7 +6,7 @@ This is a simple Demo of socket programming.
 ## Description: 
 This is meant to be an implementation of a local server and a client program using TCP sockets in Java. The server maintains a word repository (words.txt). This word file contains a list of 25143 words (a single word per line). At the prompt, the user can type any single word, such as:
 
-                *“yel”*
+*“yel”*
 
 Then, the message will be sent over the network to the server.  The server will find all the words that share the same prefix with the client’s word, and sent them back to the client as a comma-separated string. For example, in response to the word “yel” sent from the client, the server should send back the following list of words.
 
